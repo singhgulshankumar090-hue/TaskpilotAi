@@ -8,7 +8,7 @@ import {
   removeImageObject,
   resumeReview,
 } from "../controllers/aiController.js";
-import { upload } from "../configs/Multer.js";
+import { upload } from "../configs/multer.js";
 
 const aiRouter = express.Router();
 
