@@ -6,9 +6,10 @@ import cloudinary from "../configs/cloudinary.js";
 import FormData from "form-data";
 import fs from "fs";
 import pdf from "pdf-parse/lib/pdf-parse.js";
-const client = new OpenAI({
-  apiKey: process.env.GROQ_API_KEY,
-  baseURL: "https://api.groq.com/openai/v1",
+
+const AI = new OpenAI({
+  apiKey: process.env.GEMINI_API_KEY,
+  baseURL: "https://generativelanguage.googleapis.com/v1beta/openai/",
 });
 
 /* =========================
@@ -28,13 +29,17 @@ export const generateArticle = async (req, res) => {
       });
     }
 
-    const response = await client.chat.completions.create({
-      model: "llama-3.1-8b-instant",
-      messages: [{ role: "user", content: prompt }],
+    const response = await AI.chat.completions.create({
+      model: "gemini-3-flash-preview",
+      messages: [
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
       temperature: 0.7,
-      max_tokens: length || 500,
+      max_tokens: length,
     });
-
     const content = response.choices[0].message.content;
 
     await sql`
@@ -72,8 +77,8 @@ export const generateBlogTitle = async (req, res) => {
       });
     }
 
-    const response = await client.chat.completions.create({
-      model: "llama-3.1-8b-instant",
+    const response = await AI.chat.completions.create({
+      model: "gemini-2.0-flash",
       messages: [{ role: "user", content: prompt }],
       temperature: 0.7,
       max_tokens: 100,
@@ -235,9 +240,8 @@ export const resumeReview = async (req, res) => {
 
     const prompt = `Review the following resume and provide constructive feedback on its strengths, weaknesses, and areas for improvement. Resume Content:\n\n${pdfData.text}`;
 
-    
-    const response = await client.chat.completions.create({
-      model: "llama-3.1-8b-instant",
+    const response = await AI.chat.completions.create({
+      model: "gemini-2.0-flash",
       messages: [{ role: "user", content: prompt }],
       temperature: 0.7,
       max_tokens: 1000,
