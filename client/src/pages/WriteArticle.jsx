@@ -9,10 +9,10 @@ axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
 
 const WriteArticle = () => {
   const articleLength = [
-    { length: 500, text: " very small (300-500 words)" },
-    { length: 800, text: "Short (500-800 words)" },
-    { length: 1200, text: "Medium (800-1200 words)" },
-    { length: 1600, text: "Long (1200+ words)" },
+    { length: 800, text: "300-500 words" },
+    { length: 1200, text: "500-800 words" },
+    { length: 1800, text: "800-1200 words" },
+    { length: 2500, text: "1200+ words" },
   ];
 
   const [selectedLength, setSelectedLength] = useState(articleLength[0]);
@@ -26,7 +26,17 @@ const WriteArticle = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      const prompt = `Write an article about ${input} in ${selectedLength.text}`;
+      const prompt = `
+Write a detailed, well-structured article on the topic: "${input}".
+
+Requirements:
+- Length: ${selectedLength.text}
+- Include a clear title
+- Use headings and subheadings
+- Add an introduction, body, and conclusion
+- Provide examples where relevant
+- Make it engaging and informative
+`;
 
       const { data } = await axios.post(
         "/api/ai/generate-article",
